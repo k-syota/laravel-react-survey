@@ -2,8 +2,10 @@ import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axiosClient from "../axios";
+import { useStateContext } from "../contexts/ContextProvider";
 
 export default function SignUp() {
+  const { setCurrentUser, setUserToken } = useStateContext();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +23,8 @@ export default function SignUp() {
         password_confirmation: passwordConfirmation,
       })
       .then(({ data }) => {
-        console.log(data);
+        setCurrentUser(data.user);
+        setUserToken(data.token);
       })
       .catch((error) => {
         if (error.response) {
@@ -74,7 +77,8 @@ export default function SignUp() {
               id="full-name"
               name="name"
               type="text"
-              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               className="relative block w-full appearance-none rounded-none rounded-t-md border
               border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
               focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
@@ -90,7 +94,8 @@ export default function SignUp() {
               name="email"
               type="email"
               autoComplete="email"
-              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="relative block w-full appearance-none rounded-none border
               border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
               focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
@@ -105,8 +110,9 @@ export default function SignUp() {
               id="password"
               name="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              required
               className="relative block w-full appearance-none rounded-none border
               border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
               focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
@@ -121,7 +127,8 @@ export default function SignUp() {
               id="password-confirmation"
               name="password_confirmation"
               type="password"
-              required
+              value={passwordConfirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
               className="relative block w-full appearance-none rounded-none rounded-b-md border
               border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
               focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
