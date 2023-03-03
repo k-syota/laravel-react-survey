@@ -57,6 +57,7 @@ export default function Login() {
         ></div>
       )}
 
+      {email}
       <form
         onSubmit={onSubmit}
         className="mt-8 space-y-6"
