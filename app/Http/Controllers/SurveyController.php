@@ -28,9 +28,19 @@ class SurveyController extends Controller
      */
     public function store(SurveyStoreRequest $request)
     {
-        $user = $request->user();
+        $data = $request->validated();
+        if(isset($data['image'])){
+            $relativePath = $this->saveImage($data['image']);
+            $data['image'] = $relativePath;
+        }
+        $survey = Survey::create($data);
 
-        return Survey::where('user_id', $user->id)->orderBy('created_at','desc')->get();
+        foreach($data['questions'] as $question){
+            $question['survey_id'] = $survey->id;
+            $this->createQuestion($question);
+        }
+
+        return new SurveyResource($survey);
     }
 
     /**
