@@ -173,4 +173,29 @@ class SurveyController extends Controller
 
         return SurveyQuestion::create($validator->validated());
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param SurveyQuestion $question
+     * @param [type] $data
+     * @return bool
+     * @throws Illuminate\Validation\ValidationException
+     */
+    private function updateQuestion(SurveyQuestion $question, $data)
+    {
+        if(is_array($data['data'])){
+            $data['data'] = json_encode($data['data']);
+        }
+
+        $validator = Validator::make($data,[
+            'id' => 'exists:App\Model\SurveyQuestion,id',
+            'question' => 'required|string',
+            'type' => ['required', new Enum(QuestionTypeEnum::class)],
+            'description' => 'nullable|string',
+            'data' => 'present',
+        ]);
+
+        return $question->update($validator->validated());
+    }
 }
