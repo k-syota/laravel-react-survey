@@ -89,8 +89,18 @@ class SurveyController extends Controller
 
         SurveyQuestion::delete($toDelete);
 
-        foreach($data['questtions'] as $question){
+        foreach($data['questions'] as $question){
+            if(in_array($question['id'],$toAdd)){
+                $question['survey_id'] = $survey->id;
+                $this->createQuestion($question);
+            }
+        }
 
+        $questionMap = collect($data['question'])->keyBy('id');
+        foreach($survey->questions as $question){
+            if(isset($questionMap[$question->id])){
+                $this->updateQUestion($question,$questionMap[$question->id]);
+            }
         }
 
         return new SurveyResource($survey);
