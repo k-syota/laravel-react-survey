@@ -109,9 +109,19 @@ class SurveyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Survey $survey, Request $request)
     {
-        //
+        $user = $request->user();
+        if($user->id !== $survey->user_id){
+            return abort(403,'Unauthorized action');
+        }
+        $survey->delete();
+
+        if($survey->image){
+            $absolutePath = public_path($survey->image);
+            File::delete($absolutePath);
+        }
+        return response("", 204);
     }
 
     /**
