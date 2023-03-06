@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rules\Enum;
 
 class SurveyController extends Controller
@@ -65,9 +66,34 @@ class SurveyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SurveyUpdateRequest $request, string $id)
+    public function update(SurveyUpdateRequest $request, Survey $survey)
     {
-        //
+        $data = $request->validated();
+        if(isset($data['image'])){
+            $relativePath = $this->saveImage($data['image']);
+            $data['image'] = $relativePath;
+        }
+
+        if($survey->image){
+            $absolutePath = public_path($survey->image);
+            File::delete($absolutePath);
+        }
+
+        $survey->update($data);
+
+
+        $existingIds = $survey->questions()->pluck('id')->toArray();
+        $newIds = Arr::pluck($data['questions'],'id');
+        $toDelete = array_diff($existingIds,$newIds);
+        $toAdd = array_diff($newIds,$existingIds);
+
+        SurveyQuestion::delete($toDelete);
+
+        foreach($data['questtions'] as $question){
+
+        }
+
+        return new SurveyResource($survey);
     }
 
     /**
