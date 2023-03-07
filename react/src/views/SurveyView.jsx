@@ -16,22 +16,23 @@ export default function SurveyView() {
     questions: [],
   });
 
-  const onImageChoose = () => {
-    console.log("on image choose");
+  const onImageChoose = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setSurvey({
+        ...survey,
+        image: file,
+        image_url: reader.result,
+      });
+
+      e.target.value = "";
+    };
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    axiosClient
-      .post("/survey", {
-        title: "test title",
-        description: "test desc",
-        expire_date: "07/03/2023",
-        status: true,
-        questions: [],
-      })
-      .then()
-      .catch();
   };
   return (
     <>
