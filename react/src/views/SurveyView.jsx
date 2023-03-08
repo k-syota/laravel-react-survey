@@ -19,6 +19,8 @@ export default function SurveyView() {
     questions: [],
   });
 
+  const [error, setError] = useState("");
+
   const onImageChoose = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -47,7 +49,12 @@ export default function SurveyView() {
         console.log(res);
         navigate("/surveys");
       })
-      .catch();
+      .catch((err) => {
+        if (err && err.response) {
+          const error = err.response.data.message;
+          setError(error);
+        }
+      });
   };
   return (
     <>
@@ -55,6 +62,11 @@ export default function SurveyView() {
         <form action="#" method="POST" onSubmit={onSubmit}>
           <div className="shadow sm:overflow-hidden sm:rounded-md">
             <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+              {error && (
+                <div className="bg-red-500 text-white py-3 px-3 rounded-lg">
+                  {error}
+                </div>
+              )}
               {/**Image */}
               <div>
                 <label className="bl text-sm font-medium text-gray-700">
@@ -146,7 +158,9 @@ export default function SurveyView() {
                   onChange={(e) => {
                     setSurvey({ ...survey, expire_date: e.target.value });
                   }}
-                  className="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-50 focus:ring-indigo-400 sm:text-sm"
+                  className="mt-1 block w-full rounded-md
+                  border-gray-200 shadow-sm focus:border-indigo-50
+                  focus:ring-indigo-400 sm:text-sm"
                 ></input>
               </div>
               {/**expire_date */}
