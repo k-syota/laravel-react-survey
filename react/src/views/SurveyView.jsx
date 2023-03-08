@@ -3,8 +3,11 @@ import { useState } from "react";
 import TButton from "../components/core/TButton";
 import { PageComponent } from "../components/PageComponent";
 import axiosClient from "../axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SurveyView() {
+  const navigate = useNavigate();
+
   const [survey, setSurvey] = useState({
     title: "",
     slug: "",
@@ -33,6 +36,18 @@ export default function SurveyView() {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    const payload = { ...survey };
+    if (payload.image) {
+      payload.image = payload.image_url;
+    }
+    delete payload.image_url;
+    axiosClient
+      .post("/survey", payload)
+      .then((res) => {
+        console.log(res);
+        navigate("/surveys");
+      })
+      .catch();
   };
   return (
     <>
@@ -129,7 +144,7 @@ export default function SurveyView() {
                   id="expire_date"
                   value={survey.expire_date}
                   onChange={(e) => {
-                    setSurvey({ ...survey, description: e.target.value });
+                    setSurvey({ ...survey, expire_date: e.target.value });
                   }}
                   className="mt-1 block w-full rounded-md border-gray-200 shadow-sm focus:border-indigo-50 focus:ring-indigo-400 sm:text-sm"
                 ></input>
