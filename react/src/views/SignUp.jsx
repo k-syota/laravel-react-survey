@@ -1,10 +1,10 @@
+import { Link } from "react-router-dom";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import axiosClient from "../axios";
-import { useStateContext } from "../contexts/ContextProvider";
+import axiosClient from '../axios.js'
+import { useStateContext } from "../contexts/ContextProvider.jsx";
 
-export default function SignUp() {
+export default function Signup() {
   const { setCurrentUser, setUserToken } = useStateContext();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,9 +12,11 @@ export default function SignUp() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState({ __html: "" });
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = (ev) => {
+    ev.preventDefault();
     setError({ __html: "" });
+
+
     axiosClient
       .post("/signup", {
         name: fullName,
@@ -23,19 +25,16 @@ export default function SignUp() {
         password_confirmation: passwordConfirmation,
       })
       .then(({ data }) => {
-        setCurrentUser(data.user);
-        setUserToken(data.token);
+        setCurrentUser(data.user)
+        setUserToken(data.token)
       })
       .catch((error) => {
         if (error.response) {
-          const finalErrors = Object.values(error.response.data.errors).reduce(
-            (accum, next) => [...accum, ...next],
-            []
-          );
-          console.log(finalErrors);
-          setError({ __html: finalErrors.join("<br>") });
+          const finalErrors = Object.values(error.response.data.errors).reduce((accum, next) => [...accum, ...next], [])
+          console.log(finalErrors)
+          setError({__html: finalErrors.join('<br>')})
         }
-        console.error(error);
+        console.error(error)
       });
   };
 
@@ -54,12 +53,8 @@ export default function SignUp() {
         </Link>
       </p>
 
-      {error.__html && (
-        <div
-          className="bg-red-500 rounded py-2 px-3 text-white"
-          dangerouslySetInnerHTML={error}
-        ></div>
-      )}
+      {error.__html && (<div className="bg-red-500 rounded py-2 px-3 text-white" dangerouslySetInnerHTML={error}>
+      </div>)}
 
       <form
         onSubmit={onSubmit}
@@ -77,11 +72,10 @@ export default function SignUp() {
               id="full-name"
               name="name"
               type="text"
+              required
               value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="relative block w-full appearance-none rounded-none rounded-t-md border
-              border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
-              focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onChange={ev => setFullName(ev.target.value)}
+              className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="Full Name"
             />
           </div>
@@ -94,11 +88,10 @@ export default function SignUp() {
               name="email"
               type="email"
               autoComplete="email"
+              required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="relative block w-full appearance-none rounded-none border
-              border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
-              focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onChange={ev => setEmail(ev.target.value)}
+              className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="Email address"
             />
           </div>
@@ -110,28 +103,27 @@ export default function SignUp() {
               id="password"
               name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              className="relative block w-full appearance-none rounded-none border
-              border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
-              focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              required
+              value={password}
+              onChange={ev => setPassword(ev.target.value)}
+              className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="Password"
             />
           </div>
+
           <div>
             <label htmlFor="password-confirmation" className="sr-only">
-              Password confirmation
+              Password Confirmation
             </label>
             <input
               id="password-confirmation"
               name="password_confirmation"
               type="password"
+              required
               value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
-              className="relative block w-full appearance-none rounded-none rounded-b-md border
-              border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10
-              focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onChange={ev => setPasswordConfirmation(ev.target.value)}
+              className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="Password Confirmation"
             />
           </div>
@@ -148,7 +140,7 @@ export default function SignUp() {
                 aria-hidden="true"
               />
             </span>
-            Sign up
+            Signup
           </button>
         </div>
       </form>

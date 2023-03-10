@@ -12,16 +12,7 @@ class Survey extends Model
     use HasFactory;
     use HasSlug;
 
-    protected $fillable = [
-        'title',
-        'description',
-        'expire_date',
-        'image',
-        'user_id',
-        'status',
-        'created_at',
-        'updated_at'
-    ];
+    protected $fillable = ['title', 'description', 'expire_date', 'image', 'user_id', 'status', 'created_at', 'updated_at'];
 
     /**
      * Get the options for generating the slug.
@@ -31,5 +22,15 @@ class Survey extends Model
         return SlugOptions::create()
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(SurveyQuestion::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(SurveyAnswer::class);
     }
 }

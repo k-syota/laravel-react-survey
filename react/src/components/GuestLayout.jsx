@@ -1,11 +1,11 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 
 export default function GuestLayout() {
   const { userToken } = useStateContext();
 
   if (userToken) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" />
   }
 
   return (
@@ -19,9 +19,10 @@ export default function GuestLayout() {
               alt="Your Company"
             />
           </div>
+
           <Outlet />
         </div>
       </div>
     </div>
-  );
+  )
 }
